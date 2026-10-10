@@ -17,3 +17,7 @@ backend/coverage/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Database backups
+*.dump
+*.sql
