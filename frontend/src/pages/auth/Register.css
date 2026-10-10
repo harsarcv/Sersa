@@ -1,0 +1,8 @@
+
+@import "./AuthForm.css";
+
+.auth-form-success {
+  border-color: rgb(84 224 176 / 22%);
+  background: rgb(21 76 62 / 20%);
+  color: #8bf0ca;
+}

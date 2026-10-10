@@ -1,0 +1,97 @@
+
+.request-page {
+  min-width: 0;
+}
+
+.request-table {
+  min-width: 1050px;
+}
+
+.request-customer {
+  display: block;
+  max-width: 190px;
+  color: #edf3ff;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.request-subtext {
+  display: block;
+  max-width: 200px;
+  margin-top: 5px;
+  color: #8192ae;
+  font-size: 10px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.request-rejection {
+  color: #ffb0bd !important;
+}
+
+.services-status-requested {
+  border-color: #68552c;
+  color: #f6d58a;
+  background: #2a2416;
+}
+
+.services-status-approved {
+  border-color: #285747;
+  color: #8de4be;
+  background: #10271f;
+}
+
+.services-status-rejected {
+  border-color: #643b4b;
+  color: #ffc2cb;
+  background: #291722;
+}
+
+.services-status-cancelled {
+  border-color: #394a62;
+  color: #b7c5dc;
+  background: #182337;
+}
+
+.request-actions {
+  flex-wrap: wrap;
+  min-width: 145px;
+}
+
+.request-no-action {
+  color: #71809b;
+}
+
+.request-loading-options {
+  margin: 0;
+  padding: 16px 0;
+  color: #aab9d0;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.request-modal {
+  width: min(100%, 560px);
+}
+
+.request-reject-submit {
+  border-color: #a34e60;
+  color: #fff;
+  background: linear-gradient(135deg, #a8445c, #79354d);
+}
+
+.request-reject-submit:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+@media (max-width: 760px) {
+  .request-table {
+    min-width: 1000px;
+  }
+
+  .request-modal {
+    padding: 18px;
+  }
+}
+
+
