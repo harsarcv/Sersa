@@ -539,3 +539,47 @@
     width: 100%;
   }
 }
+
+
+/* Customer address management */
+.customers-address-button {
+  padding: 7px 9px;
+  border: 1px solid #285161;
+  border-radius: 7px;
+  color: #7ce0e9;
+  background: #122b39;
+  font-size: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.customers-address-button:hover { filter: brightness(1.15); }
+.customers-address-modal { width: min(100%, 620px); }
+.customers-address-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.customers-address-toolbar p { margin: 0; color: #8998b2; font-size: 11px; line-height: 1.6; }
+.customers-address-empty { padding: 24px 12px; text-align: center; color: #8998b2; font-size: 12px; }
+.customers-address-list { display: flex; flex-direction: column; gap: 12px; max-height: 42vh; overflow-y: auto; }
+.customers-address-card { display: flex; flex-direction: column; gap: 7px; padding: 14px; border: 1px solid #29384f; border-radius: 10px; background: #0a1220; color: #b9c7dc; font-size: 11px; line-height: 1.6; overflow-wrap: anywhere; }
+.customers-address-card p { margin: 0; white-space: pre-wrap; }
+.customers-address-card > strong { color: #edf3ff; }
+.customers-address-card-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.customers-address-card-heading > div { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.customers-address-card-heading strong { color: #7ce0e9; font-size: 12px; }
+.customers-default-badge { padding: 3px 7px; border-radius: 5px; background: #10271f; color: #8de4be; font-size: 9px; }
+.customers-address-form-title { margin: 0; color: #edf3ff; font-size: 14px; }
+.customers-address-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.customers-form textarea { width: 100%; min-width: 0; padding: 12px; border: 1px solid #29384f; border-radius: 8px; outline: none; color: #edf3ff; background: #0a1220; font: inherit; font-size: 12px; resize: vertical; }
+.customers-form textarea:focus { border-color: #54d8e8; box-shadow: 0 0 0 3px #54d8e81a; }
+.customers-form textarea::placeholder { color: #71809b; }
+.customers-form .customers-default-checkbox { display: flex; flex-direction: row; align-items: center; gap: 9px; font-weight: 500; }
+.customers-form .customers-default-checkbox input { width: 16px; height: 16px; accent-color: #54d8e8; }
+@media (max-width: 600px) {
+  .customers-address-toolbar { align-items: stretch; flex-direction: column; }
+  .customers-address-grid { grid-template-columns: minmax(0, 1fr); }
+  .customers-address-modal { padding: 18px; }
+}

@@ -1,6 +1,5 @@
 
 import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import "./Customers.css";
 
 const API_URL = (
@@ -11,6 +10,17 @@ const EMPTY_FORM = {
   fullName: "",
   email: "",
   phone: "",
+};
+
+const EMPTY_ADDRESS = {
+  label: "Rumah",
+  recipientName: "",
+  phone: "",
+  address: "",
+  city: "",
+  province: "",
+  postalCode: "",
+  isDefault: false,
 };
 
 export default function Customers() {
@@ -33,6 +43,15 @@ export default function Customers() {
   const [form, setForm] = useState(EMPTY_FORM);
   const [formError, setFormError] = useState("");
   const [deactivatingId, setDeactivatingId] = useState(null);
+  const [addressCustomer, setAddressCustomer] = useState(null);
+  const [addresses, setAddresses] = useState([]);
+  const [addressesLoading, setAddressesLoading] = useState(false);
+  const [addressFormOpen, setAddressFormOpen] = useState(false);
+  const [editingAddress, setEditingAddress] = useState(null);
+  const [addressForm, setAddressForm] = useState(EMPTY_ADDRESS);
+  const [addressError, setAddressError] = useState("");
+  const [addressNotice, setAddressNotice] = useState("");
+  const [savingAddress, setSavingAddress] = useState(false);
 
   const loadCustomers = useCallback(async () => {
     const token = sessionStorage.getItem("sersa_token");
@@ -218,6 +237,137 @@ export default function Customers() {
       setFormError(err.message || "Terjadi kesalahan saat menyimpan.");
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function loadAddresses(customer) {
+    const token = sessionStorage.getItem("sersa_token");
+    if (!token) {
+      window.location.replace("/login");
+      return;
+    }
+
+    setAddressesLoading(true);
+    setAddressError("");
+    try {
+      const response = await fetch(
+        `${API_URL}/api/customers/${customer.id}/addresses`,
+        { headers: { Accept: "application/json", Authorization: `Bearer ${token}` } }
+      );
+      const result = await response.json().catch(() => ({}));
+      if (response.status === 401) {
+        sessionStorage.removeItem("sersa_token");
+        window.location.replace("/login");
+        return;
+      }
+      if (!response.ok) throw new Error(result.message || "Gagal memuat alamat pelanggan.");
+      setAddresses(Array.isArray(result.data) ? result.data : []);
+    } catch (err) {
+      setAddressError(err.message || "Gagal memuat alamat pelanggan.");
+    } finally {
+      setAddressesLoading(false);
+    }
+  }
+
+  async function openAddressManager(customer) {
+    setAddressCustomer(customer);
+    setAddresses([]);
+    setAddressNotice("");
+    setAddressError("");
+    setAddressFormOpen(false);
+    setEditingAddress(null);
+    await loadAddresses(customer);
+  }
+
+  function openCreateAddressForm() {
+    setEditingAddress(null);
+    setAddressForm({ ...EMPTY_ADDRESS, recipientName: addressCustomer?.full_name || "", phone: addressCustomer?.phone || "", isDefault: addresses.length === 0 });
+    setAddressError("");
+    setAddressNotice("");
+    setAddressFormOpen(true);
+  }
+
+  function openEditAddressForm(address) {
+    setEditingAddress(address);
+    setAddressForm({
+      label: address.label || "",
+      recipientName: address.recipient_name || "",
+      phone: address.phone || "",
+      address: address.address || "",
+      city: address.city || "",
+      province: address.province || "",
+      postalCode: address.postal_code || "",
+      isDefault: Boolean(address.is_default),
+    });
+    setAddressError("");
+    setAddressNotice("");
+    setAddressFormOpen(true);
+  }
+
+  function handleAddressFormChange(event) {
+    const { name, value, type, checked } = event.target;
+    setAddressForm((previous) => ({ ...previous, [name]: type === "checkbox" ? checked : value }));
+  }
+
+  async function handleSaveAddress(event) {
+    event.preventDefault();
+    setAddressError("");
+    const payload = {
+      label: addressForm.label.trim() || "Alamat utama",
+      recipientName: addressForm.recipientName.trim(),
+      phone: addressForm.phone.trim(),
+      address: addressForm.address.trim(),
+      city: addressForm.city.trim(),
+      province: addressForm.province.trim(),
+      postalCode: addressForm.postalCode.trim(),
+      isDefault: addressForm.isDefault,
+    };
+
+    if (payload.recipientName.length < 2 || payload.recipientName.length > 150) {
+      setAddressError("Nama penerima harus terdiri dari 2–150 karakter.");
+      return;
+    }
+    if (!payload.address) {
+      setAddressError("Alamat lengkap wajib diisi.");
+      return;
+    }
+    if (payload.label.length > 80 || payload.phone.length > 30 || payload.city.length > 100 || payload.province.length > 100 || payload.postalCode.length > 20) {
+      setAddressError("Ada data alamat yang melebihi batas karakter.");
+      return;
+    }
+
+    const token = sessionStorage.getItem("sersa_token");
+    if (!token) {
+      window.location.replace("/login");
+      return;
+    }
+
+    setSavingAddress(true);
+    try {
+      const isEditing = Boolean(editingAddress);
+      const url = isEditing
+        ? `${API_URL}/api/customers/${addressCustomer.id}/addresses/${editingAddress.id}`
+        : `${API_URL}/api/customers/${addressCustomer.id}/addresses`;
+      const response = await fetch(url, {
+        method: isEditing ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (response.status === 401) {
+        sessionStorage.removeItem("sersa_token");
+        window.location.replace("/login");
+        return;
+      }
+      if (!response.ok) throw new Error(result.message || "Gagal menyimpan alamat.");
+      setAddressNotice(result.message || (isEditing ? "Alamat berhasil diperbarui." : "Alamat berhasil ditambahkan."));
+      setAddressFormOpen(false);
+      setEditingAddress(null);
+      await loadAddresses(addressCustomer);
+    } catch (err) {
+      setAddressError(err.message || "Terjadi kesalahan saat menyimpan alamat.");
+    } finally {
+      setSavingAddress(false);
     }
   }
 
@@ -443,6 +593,13 @@ export default function Customers() {
                       <div className="customers-actions">
                         <button
                           type="button"
+                          className="customers-address-button"
+                          onClick={() => openAddressManager(customer)}
+                        >
+                          Alamat
+                        </button>
+                        <button
+                          type="button"
                           className="customers-edit-button"
                           onClick={() => openEditForm(customer)}
                         >
@@ -614,6 +771,77 @@ export default function Customers() {
                 </button>
               </div>
             </form>
+          </section>
+        </div>
+      )}
+
+      {addressCustomer && (
+        <div className="customers-modal-backdrop" onMouseDown={(event) => {
+          if (event.target === event.currentTarget && !savingAddress) {
+            setAddressCustomer(null);
+            setAddressFormOpen(false);
+            setAddressError("");
+          }
+        }}>
+          <section className="customers-modal customers-address-modal" role="dialog" aria-modal="true" aria-labelledby="customers-address-title">
+            <header className="customers-modal-header">
+              <div>
+                <span className="customers-eyebrow">CUSTOMER ADDRESSES</span>
+                <h3 id="customers-address-title">Alamat — {addressCustomer.full_name}</h3>
+              </div>
+              <button type="button" className="customers-modal-close" aria-label="Tutup alamat" disabled={savingAddress} onClick={() => { setAddressCustomer(null); setAddressFormOpen(false); setAddressError(""); }}>×</button>
+            </header>
+
+            {addressNotice && <div className="customers-notice" role="status"><span>{addressNotice}</span><button type="button" onClick={() => setAddressNotice("")}>Tutup</button></div>}
+            {addressError && <div className="customers-error" role="alert"><span>{addressError}</span></div>}
+
+            {!addressFormOpen ? (
+              <>
+                <div className="customers-address-toolbar">
+                  <p>Kelola alamat pengiriman atau lokasi layanan pelanggan.</p>
+                  <button type="button" className="customers-primary-button" onClick={openCreateAddressForm}>＋ Tambah Alamat</button>
+                </div>
+                {addressesLoading ? <p className="customers-address-empty">Memuat alamat...</p> : addresses.length === 0 ? (
+                  <p className="customers-address-empty">Belum ada alamat untuk pelanggan ini.</p>
+                ) : (
+                  <div className="customers-address-list">
+                    {addresses.map((item) => (
+                      <article className="customers-address-card" key={item.id}>
+                        <div className="customers-address-card-heading">
+                          <div><strong>{item.label || "Alamat"}</strong>{item.is_default && <span className="customers-default-badge">Alamat utama</span>}</div>
+                          <button type="button" className="customers-edit-button" onClick={() => openEditAddressForm(item)}>Edit</button>
+                        </div>
+                        <strong>{item.recipient_name}</strong>
+                        {item.phone && <span>{item.phone}</span>}
+                        <p>{item.address}</p>
+                        <span>{[item.city, item.province, item.postal_code].filter(Boolean).join(", ") || "Kota/provinsi/kode pos belum diisi"}</span>
+                      </article>
+                    ))}
+                  </div>
+                )}
+                <div className="customers-form-actions">
+                  <button type="button" className="customers-secondary-button" onClick={() => { setAddressCustomer(null); setAddressFormOpen(false); setAddressError(""); }}>Selesai</button>
+                </div>
+              </>
+            ) : (
+              <form className="customers-form" onSubmit={handleSaveAddress}>
+                <h4 className="customers-address-form-title">{editingAddress ? "Edit alamat" : "Tambah alamat"}</h4>
+                <label><span className="customers-label-text">Label alamat</span><input name="label" value={addressForm.label} onChange={handleAddressFormChange} maxLength={80} placeholder="Rumah, Kantor, dll." /></label>
+                <label><span className="customers-label-text">Nama penerima <span className="required">*</span></span><input name="recipientName" value={addressForm.recipientName} onChange={handleAddressFormChange} minLength={2} maxLength={150} required placeholder="Nama penerima" /></label>
+                <label><span className="customers-label-text">Nomor telepon penerima</span><input type="tel" name="phone" value={addressForm.phone} onChange={handleAddressFormChange} maxLength={30} placeholder="08xxxxxxxxxx" /></label>
+                <label><span className="customers-label-text">Alamat lengkap <span className="required">*</span></span><textarea name="address" value={addressForm.address} onChange={handleAddressFormChange} required rows={3} maxLength={1000} placeholder="Nama jalan, nomor, RT/RW, kelurahan, kecamatan" /></label>
+                <div className="customers-address-grid">
+                  <label><span className="customers-label-text">Kota/Kabupaten</span><input name="city" value={addressForm.city} onChange={handleAddressFormChange} maxLength={100} placeholder="Kota/Kabupaten" /></label>
+                  <label><span className="customers-label-text">Provinsi</span><input name="province" value={addressForm.province} onChange={handleAddressFormChange} maxLength={100} placeholder="Provinsi" /></label>
+                </div>
+                <label><span className="customers-label-text">Kode pos</span><input name="postalCode" value={addressForm.postalCode} onChange={handleAddressFormChange} maxLength={20} placeholder="Kode pos" /></label>
+                <label className="customers-default-checkbox"><input type="checkbox" name="isDefault" checked={addressForm.isDefault} onChange={handleAddressFormChange} /><span>Jadikan alamat utama</span></label>
+                <div className="customers-form-actions">
+                  <button type="button" className="customers-secondary-button" disabled={savingAddress} onClick={() => { setAddressFormOpen(false); setEditingAddress(null); setAddressError(""); }}>Kembali</button>
+                  <button type="submit" className="customers-primary-button" disabled={savingAddress}>{savingAddress ? "Menyimpan..." : editingAddress ? "Simpan Perubahan" : "Simpan Alamat"}</button>
+                </div>
+              </form>
+            )}
           </section>
         </div>
       )}
