@@ -21,3 +21,8 @@ Thumbs.db
 # Database backups
 *.dump
 *.sql
+
+# Production database backups
+backups/
+*.dump
+*.backup
