@@ -16,7 +16,16 @@ export default function App() {
   return (
     <Routes>
       <Route element={<AuthLayout />}>
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route
+          path="/"
+          element={
+            sessionStorage.getItem("sersa_token") ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
       </Route>
