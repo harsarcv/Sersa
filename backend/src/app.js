@@ -8,6 +8,9 @@ const customerRoutes = require("./routes/customers.routes");
 const customerAddressRoutes = require("./routes/customer-addresses.routes");
 const serviceCatalogRoutes = require("./routes/service-catalog.routes");
 const serviceRequestRoutes = require("./routes/service-requests.routes");
+const appointmentRoutes = require("./routes/appointments.routes");
+const teamRoutes = require("./routes/team.routes");
+const workOrdersRoutes = require("./routes/work-orders.routes");
 
 const app = express();
 
@@ -19,6 +22,9 @@ app.use("/api/customers", customerRoutes);
 app.use("/api/customers", customerAddressRoutes);
 app.use("/api/services", serviceCatalogRoutes);
 app.use("/api/service-requests", serviceRequestRoutes);
+app.use("/api/appointments", appointmentRoutes);
+app.use("/api/team", teamRoutes);
+app.use("/api/work-orders", workOrdersRoutes);
 
 app.get("/api/health", async (req, res) => {
   try {

@@ -1,13 +1,14 @@
-
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import "./DashboardLayout.css";
-
 
 const navigation = [
   { label: "Dashboard", path: "/dashboard", icon: "▦", end: true },
   { label: "Pelanggan", path: "/customers", icon: "♙" },
   { label: "Katalog Layanan", path: "/services", icon: "◇" },
   { label: "Permintaan Layanan", path: "/service-requests", icon: "▤" },
+  { label: "Manajemen Tim", path: "/team", icon: "♧" },
+  { label: "Work Orders", path: "/work-orders", icon: "⚙" },
+  { label: "Penjadwalan", path: "/appointments", icon: "▦" },
 ];
 
 export default function DashboardLayout() {

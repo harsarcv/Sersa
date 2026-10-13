@@ -1,0 +1,143 @@
+
+.appointments-summary {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.appointments-table {
+  min-width: 1120px;
+}
+
+.appointments-table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 17px;
+  border-bottom: 1px solid #202e45;
+  color: #8998b2;
+  font-size: 10px;
+}
+
+.appointment-name {
+  min-width: 145px;
+  align-items: center;
+}
+
+.appointment-name .services-avatar {
+  width: 36px;
+  height: 36px;
+}
+
+.appointment-main-text,
+.appointment-secondary-text {
+  display: block;
+  max-width: 200px;
+  overflow-wrap: anywhere;
+}
+
+.appointment-main-text {
+  color: #edf3ff;
+  font-size: 11px;
+}
+
+.appointment-secondary-text {
+  margin-top: 5px;
+  color: #8192ae;
+  font-size: 10px;
+}
+
+.appointment-status {
+  display: inline-block;
+  padding: 5px 8px;
+  border: 1px solid #30415c;
+  border-radius: 6px;
+  color: #bcd3ff;
+  background: #152238;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.appointment-status-scheduled {
+  border-color: #305161;
+  color: #7ce0e9;
+  background: #122b39;
+}
+
+.appointment-status-rescheduled {
+  border-color: #58465e;
+  color: #d5b8e4;
+  background: #241a30;
+}
+
+.appointment-status-completed {
+  border-color: #285747;
+  color: #8de4be;
+  background: #10271f;
+}
+
+.appointment-status-cancelled {
+  border-color: #593543;
+  color: #f0a8b5;
+  background: #281722;
+}
+
+.appointment-modal {
+  width: min(100%, 600px);
+}
+
+.appointment-detail {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px;
+}
+
+.appointment-detail > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+  padding: 13px;
+  border: 1px solid #202e45;
+  border-radius: 9px;
+  background: #101a2b;
+}
+
+.appointment-detail > div > span {
+  color: #8998b2;
+  font-size: 10px;
+}
+
+.appointment-detail > div > strong {
+  color: #edf3ff;
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.appointment-detail > div > p {
+  margin: 0;
+  color: #c6d2e5;
+  font-size: 12px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+@media (max-width: 760px) {
+  .appointments-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .appointments-table-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 450px) {
+  .appointments-summary,
+  .appointment-detail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

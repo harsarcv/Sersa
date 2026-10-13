@@ -1,0 +1,124 @@
+.team-page {
+  gap: 24px;
+}
+
+.team-summary {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.team-table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 17px;
+  border-bottom: 1px solid #202e45;
+  color: #8998b2;
+  font-size: 10px;
+}
+
+.team-table {
+  min-width: 790px;
+}
+
+.team-member-name {
+  align-items: center;
+  min-width: 220px;
+}
+
+.team-member-name .services-avatar {
+  width: 36px;
+  height: 36px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.team-member-name > div {
+  min-width: 0;
+}
+
+.team-member-name strong {
+  max-width: 230px;
+}
+
+.team-member-name small {
+  max-width: 230px;
+  overflow-wrap: anywhere;
+}
+
+.team-role {
+  display: inline-block;
+  padding: 5px 8px;
+  border: 1px solid;
+  border-radius: 6px;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.team-role-admin {
+  color: #d5b8e4;
+  background: #241a30;
+  border-color: #58465e;
+}
+
+.team-role-staff {
+  color: #bcd3ff;
+  background: #152238;
+  border-color: #30415c;
+}
+
+.team-role-technician {
+  color: #7ce0e9;
+  background: #122b39;
+  border-color: #305161;
+}
+
+.team-status-active {
+  color: #8de4be;
+  background: #10271f;
+  border-color: #285747;
+}
+
+.team-status-inactive {
+  color: #d5b8e4;
+  background: #241a30;
+  border-color: #58465e;
+}
+
+.team-actions {
+  min-width: 110px;
+}
+
+.team-protected-label {
+  color: #71809b;
+  font-size: 10px;
+}
+
+.team-table-footer {
+  border-top: 1px solid #202e45;
+}
+
+.team-modal {
+  width: min(100%, 500px);
+}
+
+@media (max-width: 760px) {
+  .team-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .team-table-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .team-table-toolbar .services-secondary-button {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 450px) {
+  .team-summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

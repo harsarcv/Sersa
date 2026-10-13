@@ -1,4 +1,3 @@
-
 import { Navigate, Route, Routes } from "react-router-dom";
 import AuthLayout from "./layouts/AuthLayout";
 import DashboardLayout from "./layouts/DashboardLayout";
@@ -9,6 +8,9 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import Customers from "./pages/customers/Customers";
 import Services from "./pages/services/Services";
 import ServiceRequests from "./pages/service-requests/ServiceRequests";
+import Team from "./pages/team/Team";
+import WorkOrders from "./pages/work-orders/WorkOrders";
+import Appointments from "./pages/appointments/Appointments";
 
 export default function App() {
   return (
@@ -25,12 +27,14 @@ export default function App() {
           <Route path="/customers" element={<Customers />} />
           <Route path="/services" element={<Services />} />
           <Route
-  path="/service-requests"
-  element={<ServiceRequests />}
-/>
+            path="/service-requests"
+            element={<ServiceRequests />}
+          />
+          <Route path="/appointments" element={<Appointments />} />
+          <Route path="/team" element={<Team />} />
+          <Route path="/work-orders" element={<WorkOrders />} />
         </Route>
       </Route>
-
 
       <Route
         path="*"
