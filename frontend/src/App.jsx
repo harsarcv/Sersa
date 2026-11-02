@@ -22,6 +22,8 @@ import BusinessSettings from "./pages/settings/BusinessSettings";
 import Customers from "./pages/customers/Customers";
 import ServiceRequests from "./pages/service-requests/ServiceRequests";
 import Appointments from "./pages/appointments/Appointments";
+import Invoices from "./pages/invoices/Invoices";
+import Payments from "./pages/payments/Payments";
 
 // Technician
 import WorkOrders from "./pages/work-orders/WorkOrders";
@@ -77,14 +79,8 @@ export default function App() {
             <Route path="/customers" element={<Customers />} />
             <Route path="/service-requests" element={<ServiceRequests />} />
             <Route path="/appointments" element={<Appointments />} />
-            <Route
-              path="/invoices"
-              element={<ComingSoon title="Invoice" />}
-            />
-            <Route
-              path="/payments"
-              element={<ComingSoon title="Pembayaran" />}
-            />
+            <Route path="/invoices" element={<Invoices />} />
+            <Route path="/payments" element={<Payments />} />
           </Route>
 
           {/* TECHNICIAN */}
