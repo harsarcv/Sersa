@@ -2,17 +2,75 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import "./DashboardLayout.css";
 
 const navigation = [
-  { label: "Dashboard", path: "/dashboard", icon: "▦", end: true },
-  { label: "Pelanggan", path: "/customers", icon: "♙" },
-  { label: "Katalog Layanan", path: "/services", icon: "◇" },
-  { label: "Permintaan Layanan", path: "/service-requests", icon: "▤" },
-  { label: "Manajemen Tim", path: "/team", icon: "♧" },
-  { label: "Work Orders", path: "/work-orders", icon: "⚙" },
-  { label: "Penjadwalan", path: "/appointments", icon: "▦" },
+  {
+    label: "Dashboard",
+    path: "/dashboard",
+    icon: "▦",
+    end: true,
+    roles: ["admin", "staff", "technician"],
+  },
+  {
+    label: "Pelanggan",
+    path: "/customers",
+    icon: "♙",
+    roles: ["admin", "staff"],
+  },
+  {
+    label: "Katalog Layanan",
+    path: "/services",
+    icon: "◇",
+    roles: ["admin", "staff"],
+  },
+  {
+    label: "Permintaan Layanan",
+    path: "/service-requests",
+    icon: "▤",
+    roles: ["admin", "staff"],
+  },
+  {
+    label: "Manajemen Tim",
+    path: "/team",
+    icon: "♧",
+    roles: ["admin"],
+  },
+  {
+    label: "Work Orders",
+    path: "/work-orders",
+    icon: "⚙",
+    roles: ["admin", "staff", "technician"],
+  },
+  {
+    label: "Penjadwalan",
+    path: "/appointments",
+    icon: "▦",
+    roles: ["admin", "staff", "technician"],
+  },
 ];
+
+function getUserRole() {
+  try {
+    const token = sessionStorage.getItem("sersa_token");
+
+    if (!token) return null;
+
+    const payload = token.split(".")[1];
+    const decoded = JSON.parse(
+      atob(payload.replace(/-/g, "+").replace(/_/g, "/"))
+    );
+
+    return decoded.role || null;
+  } catch {
+    return null;
+  }
+}
 
 export default function DashboardLayout() {
   const navigate = useNavigate();
+  const role = getUserRole();
+
+  const filteredNavigation = navigation.filter((item) =>
+    item.roles.includes(role)
+  );
 
   function handleLogout() {
     sessionStorage.removeItem("sersa_token");
@@ -33,7 +91,7 @@ export default function DashboardLayout() {
         <div className="dashboard-nav-label">MENU UTAMA</div>
 
         <nav className="dashboard-navigation">
-          {navigation.map((item) => (
+          {filteredNavigation.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
