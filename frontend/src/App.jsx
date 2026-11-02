@@ -16,6 +16,7 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import Team from "./pages/team/Team";
 import Services from "./pages/services/Services";
 import BusinessSettings from "./pages/settings/BusinessSettings";
+import Reports from "./pages/reports/Reports";
 
 // Staff
 import Customers from "./pages/customers/Customers";
