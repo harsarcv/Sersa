@@ -5,35 +5,42 @@ function getTokenPayload() {
   try {
     const token = sessionStorage.getItem("sersa_token");
 
-    if (!token) return null;
+    if (!token) {
+      return null;
+    }
 
     const parts = token.split(".");
-    if (parts.length !== 3) return null;
+
+    if (parts.length !== 3) {
+      return null;
+    }
 
     const base64 = parts[1]
       .replace(/-/g, "+")
       .replace(/_/g, "/");
 
-    const payload = JSON.parse(atob(base64));
+    const paddedBase64 = base64.padEnd(
+      Math.ceil(base64.length / 4) * 4,
+      "="
+    );
 
-    // Periksa masa berlaku token
+    const payload = JSON.parse(atob(paddedBase64));
+
     if (payload.exp && payload.exp * 1000 <= Date.now()) {
       return null;
     }
 
     return payload;
-  } catch {
+  } catch (error) {
     return null;
   }
 }
 
 export default function ProtectedRoute({ allowedRoles }) {
   const location = useLocation();
-
   const payload = getTokenPayload();
-  const token = sessionStorage.getItem("sersa_token");
 
-  // Belum login atau token tidak valid
+  // Check authentication
   if (!payload) {
     sessionStorage.removeItem("sersa_token");
 
@@ -46,10 +53,9 @@ export default function ProtectedRoute({ allowedRoles }) {
     );
   }
 
-  // Ambil role dari JWT
+  // Check user role
   const role = payload.role?.toLowerCase();
 
-  // Periksa hak akses halaman
   if (allowedRoles && !allowedRoles.includes(role)) {
     return <Navigate to="/dashboard" replace />;
   }
